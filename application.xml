@@ -3,5 +3,32 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!-- Define your beans and configurations here -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/customer_db"/>
+        <property name="username" value="root"/>
+        <property name="password" value="Nicaea10"/>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="customerRepository" class="com.idenu.customer.repository.JdbcCustomerRespository">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+
+    <bean id="customerService" class="com.idenu.customer.service.CustomerServiceImpl">
+        <constructor-arg ref="customerRepository"/>
+    </bean>
+
+    <bean id="customerController" class="com.idenu.customer.controller.CustomerController">
+        <constructor-arg ref="customerService"/>
+    </bean>
+
 
 </beans>
